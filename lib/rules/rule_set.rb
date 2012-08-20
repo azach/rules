@@ -1,10 +1,19 @@
 require 'rules/rule'
 
-module Rule
+module Rules
   class RuleSet
     attr_reader :rules
 
-    def evaluate
+    def initialize(rules)
+      @rules = rules || []
+    end
+
+    # TODO: Arbitrary rule set logic
+    def evaluate(options = {})
+      rules.each do |rule|
+        return false unless rule.evaluate(options)
+      end
+      true
     end
   end
 end

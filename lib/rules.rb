@@ -1,5 +1,6 @@
 require 'rules/evaluators'
 require 'rules/evaluators/definitions'
+require 'rules/has_rules'
 require 'rules/parameters'
 require 'rules/rule'
 require 'rules/rule_set'
