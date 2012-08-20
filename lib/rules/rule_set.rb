@@ -9,9 +9,10 @@ module Rules
     end
 
     # TODO: Arbitrary rule set logic
-    def evaluate(options = {})
+    def evaluate(context = {})
       rules.each do |rule|
-        return false unless rule.evaluate(options)
+        raw_value = rule.context ? context[rule.context.to_sym] : nil
+        return false unless rule.evaluate(raw_value)
       end
       true
     end

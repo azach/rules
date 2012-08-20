@@ -1,33 +1,35 @@
 module Rules
   module Parameters
     class Base
-      attr_reader :raw_value
+      attr_reader :raw_value, :context
 
     	def initialize(options = {})
     	  @raw_value = options[:value]
+        @context = options[:context]
     	end
 
-    	def evaluate(val = raw_value)
+    	def evaluate(val = nil)
+        val ||= raw_value
     	  raise 'Raw value has already defined' if raw_value && val != raw_value
       end
     end
 
     class String < Base
-      def evaluate(val = raw_value)
+      def evaluate(val = nil)
         super
     	  val.to_s
     	end
     end
 
     class Number < Base
-      def evaluate(val = raw_value)
+      def evaluate(val = nil)
         super
     	  val.to_i
     	end
     end
 
     class Regexp < Base
-      def evaluate(val = raw_value)
+      def evaluate(val = nil)
         super
   	    ::Regexp.new(val.to_s)
     	end
@@ -41,7 +43,7 @@ module Rules
         super
       end
 
-      def evaluate(val = raw_value)
+      def evaluate(val = nil)
         super
         method_chain.each do |method|
           raise "Object does not respond to method" unless val.respond_to?(method.to_sym)
