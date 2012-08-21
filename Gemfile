@@ -6,6 +6,8 @@ source "http://rubygems.org"
 gemspec
 
 # jquery-rails is used by the dummy application
+gem "formtastic"
+gem "haml"
 gem "jquery-rails"
 
 # Declare any dependencies that are still in development here instead of in
