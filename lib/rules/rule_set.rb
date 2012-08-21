@@ -2,9 +2,11 @@ require 'rules/rule'
 
 module Rules
   class RuleSet
-    attr_reader :rules
+    extend ActiveModel::Naming
 
-    def initialize(rules)
+    attr_accessor :rules
+
+    def initialize(rules = nil)
       @rules = rules || []
     end
 

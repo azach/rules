@@ -3,6 +3,8 @@ require 'rules/parameters'
 
 module Rules
   class Rule
+    extend ActiveModel::Naming
+
     attr_reader :evaluator, :lhs_parameter, :rhs_parameter
 
     def initialize(evaluator, lhs_parameter, rhs_parameter = nil)

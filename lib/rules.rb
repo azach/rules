@@ -1,3 +1,4 @@
+require 'rules/engine'
 require 'rules/evaluators'
 require 'rules/evaluators/definitions'
 require 'rules/has_rules'
