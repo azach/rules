@@ -1,22 +1,21 @@
 require 'spec_helper'
 
 describe Rules::Parameters do
-  let (:user) do
-    stub('user').tap do |u|
-      u.stub(:name).and_return('terry')
-      u.stub_chain(:account, :balance).and_return(100)
-    end
-  end
-
   describe Rules::Parameters::Attribute do
+    let (:user) do
+      stub('user', name: 'terry').tap do |u|
+        u.stub_chain(:account, :balance).and_return(100)
+      end
+    end
+    
     describe '#evaluate' do
       it 'returns the value of the passed in object for the given attribute' do
-        rule = Rules::Parameters::Attribute.new(value: user, attribute: :name)
+        rule = Rules::Parameters::Attribute.new(object: user, attribute: :name)
         rule.evaluate.should == 'terry'
       end
 
       it 'returns the value of the passed in object for the given attribute chain' do
-        rule = Rules::Parameters::Attribute.new(value: user, attributes: [:account, :balance])
+        rule = Rules::Parameters::Attribute.new(object: user, attributes: [:account, :balance])
         rule.evaluate.should == 100
       end
 
@@ -31,10 +30,10 @@ describe Rules::Parameters do
       end
 
       it 'raises an error if an object is defined and one is passed in at run-time' do
-        rule = Rules::Parameters::Attribute.new(value: stub('second user'), attribute: :name)
+        rule = Rules::Parameters::Attribute.new(object: stub('second user'), attribute: :name)
         expect {
           rule.evaluate(user)
-        }.to raise_error('Raw value has already defined')
+        }.to raise_error('Object has already been defined')
       end
     end
   end

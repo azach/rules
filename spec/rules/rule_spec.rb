@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Rules::Rule do
   let (:evaluator) { :equals }
-  let (:lhs) { Rules::Parameters::Base.new(value: 'lhs') }
-  let (:rhs) { Rules::Parameters::Base.new(value: 'rhs') }
+  let (:lhs) { stub('lhs param') }
+  let (:rhs) { stub('rhs param') }
 
   describe '#new' do
     it 'requires a valid evaluator' do

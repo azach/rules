@@ -1,55 +1,37 @@
 module Rules
   module Parameters
-    class Base
-      attr_reader :raw_value, :context
+    require 'rules/parameters/constant'
 
-    	def initialize(options = {})
-    	  @raw_value = options[:value]
-        @context = options[:context]
-    	end
+    @@constants ||= {}
 
-    	def evaluate(val = nil)
-        val ||= raw_value
-    	  raise 'Raw value has already defined' if raw_value && val != raw_value
-      end
+    def self.constants
+      @@constants
     end
 
-    class String < Base
-      def evaluate(val = nil)
-        super
-    	  val.to_s
-    	end
+    def self.define_constant(key, &block)
+      raise 'Constant already exists' if @@constants[key]
+      constant = Constant.new(key)
+      constant.instance_eval(&block) if block_given?
+      @@constants[key] = constant
     end
 
-    class Number < Base
-      def evaluate(val = nil)
-        super
-    	  val.to_i
-    	end
-    end
-
-    class Regexp < Base
-      def evaluate(val = nil)
-        super
-  	    ::Regexp.new(val.to_s)
-    	end
-    end
-
-    class Attribute < Base
-      attr_reader :method_chain
-
+    class Attribute
       def initialize(options = {})
-        @method_chain = options[:attributes] || [options[:attribute]]
-        super
+        @method_chain = options[:attributes] || Array.wrap(options[:attribute])        
+        @object = options[:object]
+        @context = options[:context]
+        raise 'Can not specify a context and an object' if @object && @context
       end
 
-      def evaluate(val = nil)
-        super
-        method_chain.each do |method|
-          raise "Object does not respond to method" unless val.respond_to?(method.to_sym)
-          val = val.send(method.to_sym)
+      def evaluate(object = nil)
+        raise 'Must specify an attribute to evaluate on the object' if @method_chain.blank?
+        raise 'Object has already been defined' if @object && object
+        object ||= @object
+        @method_chain.each do |method|
+          raise 'Object does not respond to method' unless object.respond_to?(method.to_sym)
+          object = object.send(method.to_sym)
         end
-        val
+        object
       end
     end
   end
