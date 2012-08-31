@@ -2,30 +2,32 @@ require 'rules/evaluators'
 require 'rules/parameters'
 
 module Rules
-  class Rule
-    extend ActiveModel::Naming
+  class Rule < ActiveRecord::Base
 
-    attr_reader :evaluator, :lhs_parameter, :rhs_parameter
+    attr_accessible :rule_set, :evaluator, :lhs_parameter, :rhs_parameter
 
-    def initialize(evaluator, lhs_parameter, rhs_parameter = nil)
-      raise 'Invalid evaluator' unless evaluator = Evaluators.list[evaluator]
-      raise ArgumentError.new("#{evaluator} requires a right hand side parameter") if evaluator.requires_rhs? && rhs_parameter.nil?
+    store :parameters, :accessors => [:lhs_parameter, :rhs_parameter]
 
-      @evaluator = evaluator
-      @lhs_parameter = lhs_parameter
-      @rhs_parameter = rhs_parameter
+    belongs_to :rule_set, class_name: 'Rules::RuleSet'
+
+    validates :evaluator, presence: true
+    validates :lhs_parameter, presence: true
+    validates :rhs_parameter, presence: true, if: ->(rule) { rule.evaluator.try(:requires_rhs?) }
+
+    def evaluate(context = {})
+      lhv = value(lhs_parameter, context)
+      rhv = value(rhs_parameter, context)
+      evaluator.evaluate(lhv, rhv)
     end
 
-    def evaluate(options = {})
-      lhv = value(lhs_parameter, options[:lhs_raw_value])
-      rhv = value(rhs_parameter, options[:rhs_raw_value])
-      evaluator.evaluate(lhv, rhv)
+    def evaluator=(evaluator)
+      super(Evaluators.list[evaluator.to_sym])
     end
 
     private
 
     def value(parameter, *args)
-      parameter.respond_to?(:evaluate) ? parameter.evaluate(*args) : parameter
+      parameter.respond_to?(:evaluate) ? parameter.evaluate(context) : parameter
     end
   end
 end
