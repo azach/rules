@@ -6,9 +6,12 @@ source "http://rubygems.org"
 gemspec
 
 # jquery-rails is used by the dummy application
+gem "activeadmin"
+gem "coffee-rails"
 gem "formtastic"
 gem "haml"
 gem "jquery-rails"
+gem "sass-rails"
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
