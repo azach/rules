@@ -10,7 +10,7 @@ module Rules
 
     accepts_nested_attributes_for :rules, allow_destroy: true
 
-    # TODO: Arbitrary rule set logic
+    # TODO: Arbitrary rule set logic (Treetop)
     def evaluate(context = {})
       rules.each do |rule|
         return false unless rule.evaluate(context)
