@@ -2,16 +2,19 @@ module Rules
   module Evaluators
     define_evaluator :equals do
       self.evaluation_method = ->(lhs, rhs) { lhs == rhs }
+      self.requires_rhs = true
     end
 
     define_evaluator :not_equals do
       self.evaluation_method = ->(lhs, rhs) { lhs != rhs }
       self.name = 'does not equal'
+      self.requires_rhs = true
     end
 
     define_evaluator :contains do
       self.evaluation_method = ->(lhs, rhs) { lhs.include?(rhs) }
       self.name = 'contains'
+      self.requires_rhs = true
     end
 
     define_evaluator :not_contains do
