@@ -39,5 +39,25 @@ module Rules
       self.name = 'matches'
       self.requires_rhs = false
     end
+
+    define_evaluator :less_than do
+      self.evaluation_method = ->(lhs, rhs) { lhs < rhs }
+      self.name = 'less than'
+    end
+
+    define_evaluator :less_than_or_equal_to do
+      self.evaluation_method = ->(lhs, rhs) { lhs <= rhs }
+      self.name = 'less than or equal to'
+    end
+
+    define_evaluator :greater_than do
+      self.evaluation_method = ->(lhs, rhs) { lhs > rhs }
+      self.name = 'greater than'
+    end
+
+    define_evaluator :greater_than_or_equal_to do
+      self.evaluation_method = ->(lhs, rhs) { lhs >= rhs }
+      self.name = 'greater than or equal to'
+    end
   end
 end
