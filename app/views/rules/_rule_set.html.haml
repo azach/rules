@@ -1,8 +1,0 @@
-= fields_for rule_set do |rule_set_form|
-  - rule_set.rules.each do |rule|
-    - fields_for rule do |rules_form|
-      = rules_form.select :lhs_parameter, []
-      = rules_form.text_field :lhs_value
-      = rules_form.select :evaluator, options_from_collection_for_select(Rules.evaluators, 'first', 'last')
-      = rules_form.select :rhs_parameter, []
-      = rules_form.text_field :rhs_value
