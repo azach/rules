@@ -35,29 +35,39 @@ module Rules
     end
 
     define_evaluator :matches do
-      self.evaluation_method = ->(lhs) { !!(lhs =~ rhs) }
+      self.evaluation_method = ->(lhs, rhs) { !!(lhs =~ Regexp.new(rhs)) }
       self.name = 'matches'
-      self.requires_rhs = false
+      self.requires_rhs = true
+    end
+
+    define_evaluator :not_matches do
+      self.evaluation_method = ->(lhs, rhs) { !(lhs =~ Regexp.new(rhs)) }
+      self.name = 'does not match'
+      self.requires_rhs = true
     end
 
     define_evaluator :less_than do
       self.evaluation_method = ->(lhs, rhs) { lhs < rhs }
       self.name = 'less than'
+      self.requires_rhs = true
     end
 
     define_evaluator :less_than_or_equal_to do
       self.evaluation_method = ->(lhs, rhs) { lhs <= rhs }
       self.name = 'less than or equal to'
+      self.requires_rhs = true
     end
 
     define_evaluator :greater_than do
       self.evaluation_method = ->(lhs, rhs) { lhs > rhs }
       self.name = 'greater than'
+      self.requires_rhs = true
     end
 
     define_evaluator :greater_than_or_equal_to do
       self.evaluation_method = ->(lhs, rhs) { lhs >= rhs }
       self.name = 'greater than or equal to'
+      self.requires_rhs = true
     end
   end
 end
