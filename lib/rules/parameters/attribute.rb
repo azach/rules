@@ -1,17 +1,23 @@
 module Rules::Parameters
   class Attribute
-    attr_reader :attribute
+    attr_reader :attribute, :name
 
     def initialize(options = {})
-      @attribute = options[:attribute]
+      @name      = options[:name]
+      @attribute = options[:attribute].to_sym
     end
 
     def evaluate(context = {})
-      context[@attribute]
+      context.fetch(attribute)
     end
 
-    def cast
-      raise NotImplementedError
+    def cast(value)
+      # TODO
+      value
+    end
+
+    def to_s
+      @name
     end
   end
 end

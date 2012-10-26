@@ -8,7 +8,7 @@ module Rules
     belongs_to :rule_set, class_name: 'Rules::RuleSet'
 
     validates :evaluator, presence: true, inclusion: {in: Evaluators.list.keys.map(&:to_s)}
-    validates :lhs_parameter, presence: true, inclusion: {in: Parameters.constants.keys.map(&:to_s)}
+    validates :lhs_parameter, presence: true, inclusion: {in: ->(rule) { rule.valid_parameters }}
     validates :rhs_parameter, presence: true, if: ->(rule) { rule.get_evaluator.try(:requires_rhs?) }
     validates :rhs_parameter, inclusion: {in: [nil, ''], message: 'must be blank for this evaluation method'}, unless: ->(rule) { rule.get_evaluator.try(:requires_rhs?) }
 
@@ -21,19 +21,32 @@ module Rules
     end
 
     def get_evaluator
-      @evaluator ||= evaluator ? Evaluators.list[evaluator.to_sym] : nil
+      @get_evaluator ||= evaluator ? Evaluators.list[evaluator.to_sym] : nil
     end
 
     def lhs_parameter_value(context = {})
-      @lhs_parameter_value ||= lhs_parameter_object.try(:evaluate, context)
+      lhs_parameter_object.try(:evaluate, context)
     end
 
     def rhs_parameter_value
-      @rhs_parameter_value ||= lhs_parameter_object ? lhs_parameter_object.cast(rhs_parameter) : rhs_parameter
+      lhs_parameter_object ? lhs_parameter_object.cast(rhs_parameter) : rhs_parameter
     end
 
     def lhs_parameter_object
-      lhs_parameter ? Parameters.constants[lhs_parameter.to_sym] : nil
+      @lhs_parameter_object ||= if lhs_parameter
+        Parameters.constants[lhs_parameter.to_sym] \
+          || valid_contexts[lhs_parameter.to_sym]
+      else
+        nil
+      end
+    end
+
+    def valid_parameters
+      Parameters.constants.keys.map(&:to_s) + valid_contexts.keys.map(&:to_s)
+    end
+
+    def valid_contexts
+      rule_set ? rule_set.contexts : {}
     end
   end
 end

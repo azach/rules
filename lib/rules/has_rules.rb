@@ -6,6 +6,10 @@ module Rules
 
         attr_accessible :rule_set_attributes
         accepts_nested_attributes_for :rule_set, allow_destroy: true
+
+        def define_rule_contexts(contexts = {})
+          Rules::RuleSet.set_context_for(self, contexts)
+        end
       end
     end
 
@@ -13,7 +17,7 @@ module Rules
       super || Rules::RuleSet.new
     end
 
-    def evaluate_rules(options = {})
+    def evaluate(options = {})
       rule_set.evaluate(options)
     end
   end

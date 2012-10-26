@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe Rules::Rule do
-  let (:evaluator) { 'equals' }
-  let (:lhs) { 'today' }
-  let (:rhs) { Date.today.to_s }
+  let(:rule_set) { Rules::RuleSet.new }
+  let(:evaluator) { 'equals' }
+  let(:lhs) { 'today' }
+  let(:rhs) { Date.today.to_s }
 
   describe 'validations' do
     it 'requires a valid evaluator' do
@@ -18,6 +19,12 @@ describe Rules::Rule do
       rule.errors[:lhs_parameter].should include("is not included in the list")
     end
 
+    it 'requires a valid lhs parameter' do
+      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter: 'fake', rhs_parameter: nil)
+      rule.should_not be_valid
+      rule.errors[:lhs_parameter].should include("is not included in the list")
+    end
+
     it 'requires a rhs parameter if the evaluator requires one' do
       rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter: lhs, rhs_parameter: nil)
       rule.should_not be_valid
@@ -28,6 +35,17 @@ describe Rules::Rule do
       rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter: lhs, rhs_parameter: rhs)
       rule.should_not be_valid
       rule.errors[:rhs_parameter].should include("must be blank for this evaluation method")
+    end
+
+    it 'allows a lhs parameter with a valid constant key' do
+      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter: 'today')
+      rule.should be_valid
+    end
+
+    it 'allows a lhs parameter with a valid context key' do
+      rule_set.stub(contexts: {current_user: 'The current user'})
+      rule = Rules::Rule.new(rule_set: rule_set, evaluator: 'nil', lhs_parameter: 'current_user')
+      rule.should be_valid
     end
 
     it 'is valid for well defined rules' do
@@ -57,9 +75,33 @@ describe Rules::Rule do
       rule.lhs_parameter_value.should be_nil
     end
 
-    it 'returns the evaluated attribute for the parameter key' do
+    it 'returns the evaluated attribute for a constant key' do
       rule = Rules::Rule.new(lhs_parameter: 'today')
       rule.lhs_parameter_value.should == Time.now.utc.to_date
+    end
+
+    it 'returns the right value for an attribute' do
+      current_user = mock('current user')
+      current_user_context = Rules::Parameters::Attribute.new(attribute: :current_user, name: 'the current user')
+      rule_set.stub(contexts: {current_user: current_user_context})
+
+      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
+
+      rule.lhs_parameter_value({
+        current_user: current_user,
+        current_price: 10
+      }).should == current_user
+    end
+
+    it 'raises an error if the necessary contexts are not provided for an attribute' do
+      current_user_context = Rules::Parameters::Attribute.new(attribute: :current_user, name: 'the current user')
+      rule_set.stub(contexts: {current_user: current_user_context})
+
+      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
+
+      expect {
+        rule.lhs_parameter_value(current_price: 10)
+      }.to raise_error KeyError
     end
   end
 
@@ -88,9 +130,15 @@ describe Rules::Rule do
       rule.lhs_parameter_object.should be_nil
     end
 
-    it 'returns the attribute for the parameter key' do
+    it 'returns the constant for the parameter key if defined' do
       rule = Rules::Rule.new(lhs_parameter: lhs)
       rule.lhs_parameter_object.should be_kind_of(Rules::Parameters::Constant)
+    end
+
+    it 'returns the context for the parameter key if defined' do
+      rule_set.stub(contexts: {current_user: Rules::Parameters::Attribute.new(attribute: :current_user)})
+      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
+      rule.lhs_parameter_object.should be_kind_of(Rules::Parameters::Attribute)
     end
   end
 
@@ -104,6 +152,10 @@ describe Rules::Rule do
 
       rule = Rules::Rule.new(lhs_parameter: 'random', rhs_parameter: 1000, evaluator: 'less_than')
       rule.evaluate.should be_true
+
+      rule_set.stub(contexts: {email_address: Rules::Parameters::Attribute.new(attribute: :email_address)})
+      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'matches', rule_set: rule_set)
+      rule.evaluate(email_address: 'test@example.com').should be_true
     end
 
     it 'returns false for rules that do not meet the conditions' do
@@ -115,6 +167,28 @@ describe Rules::Rule do
 
       rule = Rules::Rule.new(lhs_parameter: 'random', rhs_parameter: 1000, evaluator: 'greater_than')
       rule.evaluate.should be_false
+
+      rule_set.stub(contexts: {email_address: Rules::Parameters::Attribute.new(attribute: :email_address)})
+      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set)
+      rule.evaluate(email_address: 'test@example.com').should be_false
+    end
+  end
+
+  describe '#valid_contexts' do
+    it 'returns an empty array with no rule set' do
+      rule = Rules::Rule.new
+      rule.valid_contexts.should be_empty
+    end
+
+    it 'returns an empty array with a rule set with no contexts' do
+      rule = Rules::Rule.new(rule_set: rule_set)
+      rule.valid_contexts.should be_empty
+    end
+
+    it 'returns a list of context for a rule set' do
+      rule_set.stub(contexts: {current_user: mock('attribute'), order_price: mock('attribute')})
+      rule = Rules::Rule.new(rule_set: rule_set)
+      rule.should have(2).valid_contexts
     end
   end
 end
