@@ -11,7 +11,7 @@ module Rules
         raise 'Unknown evaluation method' unless evaluation_method
         evaluation_method.call
       end
-      
+
       def to_s
         name
       end
