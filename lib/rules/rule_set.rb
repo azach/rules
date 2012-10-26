@@ -2,7 +2,7 @@ require 'rules/has_rules'
 
 module Rules
   class RuleSet < ActiveRecord::Base
-    attr_accessible :rules, :evaluation_logic
+    attr_accessible :rules, :evaluation_logic, :rules_attributes
 
     belongs_to :source, polymorphic: true
 

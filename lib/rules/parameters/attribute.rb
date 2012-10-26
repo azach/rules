@@ -19,6 +19,10 @@ module Rules::Parameters
       object
     end
 
+    def cast
+      raise NotImplementedError
+    end
+
     def as_json(options = nil)
       {
         context: context,
