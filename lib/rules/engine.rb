@@ -4,7 +4,7 @@ module Rules
 
     initializer :active_admin do
       if defined? ActiveAdmin
-        require 'rules/extensions/active_admin/form_builder'
+        require 'rules/extensions/active_admin/dsl'
       end
     end
   end

@@ -11,3 +11,15 @@ ActiveAdmin::FormBuilder.class_eval do
     end
   end
 end
+
+ActiveAdmin::Views::Pages::Show.class_eval do
+  def show_rules
+    panel 'Rules' do
+      table_for resource.rule_set.rules do |rule|
+        column('Left hand side') { |rule| rule.lhs_parameter_object.to_s.titleize }
+        column('Condition') { |rule| rule.get_evaluator }
+        column('Right hand side') { |rule| rule.rhs_parameter_value.to_s }
+      end
+    end
+  end
+end

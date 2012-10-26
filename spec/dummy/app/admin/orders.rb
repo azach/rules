@@ -1,4 +1,19 @@
 ActiveAdmin.register Order do
+  show do |f|
+    attributes_table do
+      row :id
+      row :quantity
+      row :price
+      row :customer
+      row :placed
+      row :shipped
+      row :created_at
+      row :updated_at
+    end
+
+    show_rules
+  end
+
   form do |f|
     f.inputs 'Details' do
       f.input :quantity
