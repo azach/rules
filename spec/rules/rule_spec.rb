@@ -42,8 +42,8 @@ describe Rules::Rule do
       rule.should be_valid
     end
 
-    it 'allows a lhs parameter with a valid context key' do
-      rule_set.stub(contexts: {current_user: 'The current user'})
+    it 'allows a lhs parameter with a valid attribute key' do
+      rule_set.stub(attributes: {current_user: 'The current user'})
       rule = Rules::Rule.new(rule_set: rule_set, evaluator: 'nil', lhs_parameter: 'current_user')
       rule.should be_valid
     end
@@ -82,8 +82,8 @@ describe Rules::Rule do
 
     it 'returns the right value for an attribute' do
       current_user = mock('current user')
-      current_user_context = Rules::Parameters::Attribute.new(attribute: :current_user, name: 'the current user')
-      rule_set.stub(contexts: {current_user: current_user_context})
+      current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
+      rule_set.stub(attributes: {current_user: current_user_attribute})
 
       rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
 
@@ -93,9 +93,9 @@ describe Rules::Rule do
       }).should == current_user
     end
 
-    it 'raises an error if the necessary contexts are not provided for an attribute' do
-      current_user_context = Rules::Parameters::Attribute.new(attribute: :current_user, name: 'the current user')
-      rule_set.stub(contexts: {current_user: current_user_context})
+    it 'raises an error if the necessary attributes are not provided for an attribute' do
+      current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
+      rule_set.stub(attributes: {current_user: current_user_attribute})
 
       rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
 
@@ -135,8 +135,8 @@ describe Rules::Rule do
       rule.lhs_parameter_object.should be_kind_of(Rules::Parameters::Constant)
     end
 
-    it 'returns the context for the parameter key if defined' do
-      rule_set.stub(contexts: {current_user: Rules::Parameters::Attribute.new(attribute: :current_user)})
+    it 'returns the attribute for the parameter key if defined' do
+      rule_set.stub(attributes: {current_user: Rules::Parameters::Attribute.new(key: :current_user)})
       rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
       rule.lhs_parameter_object.should be_kind_of(Rules::Parameters::Attribute)
     end
@@ -150,7 +150,7 @@ describe Rules::Rule do
       rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'not_equals')
       rule.evaluate.should be_true
 
-      rule_set.stub(contexts: {email_address: Rules::Parameters::Attribute.new(attribute: :email_address)})
+      rule_set.stub(attributes: {email_address: Rules::Parameters::Attribute.new(key: :email_address)})
       rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'matches', rule_set: rule_set)
       rule.evaluate(email_address: 'test@example.com').should be_true
     end
@@ -162,27 +162,27 @@ describe Rules::Rule do
       rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'equals')
       rule.evaluate.should be_false
 
-      rule_set.stub(contexts: {email_address: Rules::Parameters::Attribute.new(attribute: :email_address)})
-      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set) 
+      rule_set.stub(attributes: {email_address: Rules::Parameters::Attribute.new(key: :email_address)})
+      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set)
      rule.evaluate(email_address: 'test@example.com').should be_false
     end
   end
 
-  describe '#valid_contexts' do
+  describe '#valid_attributes' do
     it 'returns an empty array with no rule set' do
       rule = Rules::Rule.new
-      rule.valid_contexts.should be_empty
+      rule.valid_attributes.should be_empty
     end
 
-    it 'returns an empty array with a rule set with no contexts' do
+    it 'returns an empty array with a rule set with no attributes' do
       rule = Rules::Rule.new(rule_set: rule_set)
-      rule.valid_contexts.should be_empty
+      rule.valid_attributes.should be_empty
     end
 
-    it 'returns a list of context for a rule set' do
-      rule_set.stub(contexts: {current_user: mock('attribute'), order_price: mock('attribute')})
+    it 'returns a list of attributes for a rule set' do
+      rule_set.stub(attributes: {current_user: mock('attribute'), order_price: mock('attribute')})
       rule = Rules::Rule.new(rule_set: rule_set)
-      rule.should have(2).valid_contexts
+      rule.should have(2).valid_attributes
     end
   end
 end

@@ -8,7 +8,7 @@ module Rules::Parameters
       self.name = key.to_s
     end
 
-    def evaluate(context = {})
+    def evaluate(attributes = {})
       raise 'Unknown evaluation method' unless evaluation_method
       evaluation_method.call
     end

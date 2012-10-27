@@ -11,32 +11,32 @@ module Rules
 
     accepts_nested_attributes_for :rules, allow_destroy: true
 
-    def self.set_context_for(klass, klass_contexts)
-      @contexts ||= {}
-      @contexts[klass] = attributize(klass_contexts)
+    def self.set_attributes_for(klass, klass_attributes)
+      @attributes ||= {}
+      @attributes[klass] = attributize(klass_attributes)
     end
 
-    def self.contexts
-      @contexts || {}
+    def self.attributes
+      @attributes || {}
     end
 
-    def self.attributize(context_hashes)
+    def self.attributize(attributes_hash)
       mapped_hash = {}
-      context_hashes.each do |k, v|
-        mapped_hash[k] = Rules::Parameters::Attribute.new(v.merge(attribute: k))
+      attributes_hash.each do |k, v|
+        mapped_hash[k] = Rules::Parameters::Attribute.new(v.merge(key: k))
       end
       mapped_hash
     end
 
-    def contexts
+    def attributes
       return {} unless source
-      self.class.contexts[source.class] || {}
+      self.class.attributes[source.class] || {}
     end
 
     # TODO: Arbitrary rule set logic (Treetop)
-    def evaluate(context = {})
+    def evaluate(attributes = {})
       rules.each do |rule|
-        return false unless rule.evaluate(context)
+        return false unless rule.evaluate(attributes)
       end
       true
     end

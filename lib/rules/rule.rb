@@ -14,8 +14,8 @@ module Rules
 
     store :parameters, :accessors => [:lhs_parameter, :rhs_parameter]
 
-    def evaluate(context = {})
-      lhv = lhs_parameter_value(context)
+    def evaluate(attributes = {})
+      lhv = lhs_parameter_value(attributes)
       rhv = rhs_parameter_value
       get_evaluator.evaluate(lhv, rhv)
     end
@@ -24,8 +24,8 @@ module Rules
       @get_evaluator ||= evaluator ? Evaluators.list[evaluator.to_sym] : nil
     end
 
-    def lhs_parameter_value(context = {})
-      lhs_parameter_object.try(:evaluate, context)
+    def lhs_parameter_value(attributes = {})
+      lhs_parameter_object.try(:evaluate, attributes)
     end
 
     def rhs_parameter_value
@@ -35,18 +35,18 @@ module Rules
     def lhs_parameter_object
       @lhs_parameter_object ||= if lhs_parameter
         Parameters.constants[lhs_parameter.to_sym] \
-          || valid_contexts[lhs_parameter.to_sym]
+          || valid_attributes[lhs_parameter.to_sym]
       else
         nil
       end
     end
 
     def valid_parameters
-      Parameters.constants.keys.map(&:to_s) + valid_contexts.keys.map(&:to_s)
+      Parameters.constants.keys.map(&:to_s) + valid_attributes.keys.map(&:to_s)
     end
 
-    def valid_contexts
-      rule_set ? rule_set.contexts : {}
+    def valid_attributes
+      rule_set ? rule_set.attributes : {}
     end
   end
 end

@@ -2,15 +2,15 @@ require 'rules/parameters/parameter'
 
 module Rules::Parameters
   class Attribute < Parameter
-    attr_reader :attribute
+    attr_reader :key
 
     def initialize(options = {})
-      @name      = options[:name]
-      @attribute = options[:attribute].to_sym
+      @name = options[:name]
+      @key  = options[:key].to_sym
     end
 
-    def evaluate(context = {})
-      context.fetch(attribute)
+    def evaluate(attributes = {})
+      attributes.fetch(key)
     end
   end
 end

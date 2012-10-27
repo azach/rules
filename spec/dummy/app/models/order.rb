@@ -3,7 +3,7 @@ class Order < ActiveRecord::Base
 
   include Rules::HasRules
 
-  define_rule_contexts({
+  has_rule_attributes({
     customer_email: {
       name: 'customer email address'
     },
@@ -13,10 +13,8 @@ class Order < ActiveRecord::Base
   })
 
   def check_if_valid
-    evaluate(context: {
+    evaluate \
       customer: customer,
       price: price
-    })
   end
-
 end

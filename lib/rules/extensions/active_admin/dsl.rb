@@ -1,5 +1,5 @@
 ActiveAdmin::FormBuilder.class_eval do
-  def has_rules(contexts = {})
+  def has_rules
     self.inputs 'Rules' do
       self.semantic_fields_for :rule_set do |rules_rule_set_form|
         rules_rule_set_form.has_many :rules do |rules_rule_form|
@@ -12,7 +12,7 @@ ActiveAdmin::FormBuilder.class_eval do
   end
 
   def rules_parameter_collection(rule_set)
-    @rules_parameter_collection ||= Rules.constants.merge(rule_set.try(:contexts) || {}).map {|key, const| [const.name, key] }
+    @rules_parameter_collection ||= Rules.constants.merge(rule_set.try(:attributes) || {}).map {|key, const| [const.name, key] }
   end
 end
 

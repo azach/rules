@@ -2,49 +2,49 @@ require 'spec_helper'
 
 describe Rules::RuleSet do
   let(:rule_set) { Rules::RuleSet.new }
-  let(:context) { {context1: {name: 'name of context 1'}, context2: {name: 'name of context 2'}} }
+  let(:attributes) { {attribute1: {name: 'name of attribute 1'}, attribute2: {name: 'name of attribute 2'}} }
 
   before { stub_const('FakeClass', Class.new) }
 
-  describe '.set_context_for' do
-    it 'returns nil if there are no contexts for the given class' do
-      Rules::RuleSet.contexts[FakeClass].should be_nil
+  describe '.set_attributes_for' do
+    it 'returns nil if there are no attributes for the given class' do
+      Rules::RuleSet.attributes[FakeClass].should be_nil
     end
 
-    it 'stores the list of contexts for the specified class' do
-      Rules::RuleSet.set_context_for(FakeClass, context)
-      Rules::RuleSet.contexts[FakeClass].should have(2).contexts
+    it 'stores the list of attributes for the specified class' do
+      Rules::RuleSet.set_attributes_for(FakeClass, attributes)
+      Rules::RuleSet.attributes[FakeClass].should have(2).attributes
     end
   end
 
-  describe '#contexts' do
-    before { Rules::RuleSet.set_context_for(FakeClass, context) }
+  describe '#attributes' do
+    before { Rules::RuleSet.set_attributes_for(FakeClass, attributes) }
 
     it 'returns an empty hash if there is no source' do
-      rule_set.contexts.should == {}
+      rule_set.attributes.should == {}
     end
 
-    it 'returns an empty hash if the class has no defined contexts' do
+    it 'returns an empty hash if the class has no defined attributes' do
       rule_set.stub(source: Object.new)
-      rule_set.contexts.should == {}
+      rule_set.attributes.should == {}
     end
 
-    it 'returns a list of contexts for its source class' do
+    it 'returns a list of attributes for its source class' do
       rule_set.stub(source: FakeClass.new)
-      rule_set.contexts.should have(2).contexts
+      rule_set.attributes.should have(2).attributes
     end
 
-    it 'returns the context as an attributized object' do
+    it 'returns the attribute as an attributized object' do
       rule_set.stub(source: FakeClass.new)
-      rule_set.contexts[:context1].should be_kind_of(Rules::Parameters::Attribute)
+      rule_set.attributes[:attribute1].should be_kind_of(Rules::Parameters::Attribute)
     end
 
-    it 'stores the attribute and name on the attribute object' do
+    it 'stores the key and name on the attribute object' do
       rule_set.stub(source: FakeClass.new)
-      attribute = rule_set.contexts[:context1]
+      attribute = rule_set.attributes[:attribute1]
 
-      attribute.attribute.should == :context1
-      attribute.name.should == 'name of context 1'
+      attribute.key.should == :attribute1
+      attribute.name.should == 'name of attribute 1'
     end
   end
 end

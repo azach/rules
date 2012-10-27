@@ -7,8 +7,8 @@ module Rules
         attr_accessible :rule_set_attributes
         accepts_nested_attributes_for :rule_set, allow_destroy: true
 
-        def define_rule_contexts(contexts = {})
-          Rules::RuleSet.set_context_for(self, contexts)
+        def has_rule_attributes(attributes = {})
+          Rules::RuleSet.set_attributes_for(self, attributes)
         end
       end
     end
