@@ -16,7 +16,7 @@ module Rules
 
     def evaluate(attributes = {})
       lhv = lhs_parameter_value(attributes)
-      rhv = rhs_parameter_value
+      rhv = rhs_parameter_value if get_evaluator.requires_rhs?
       get_evaluator.evaluate(lhv, rhv)
     end
 
