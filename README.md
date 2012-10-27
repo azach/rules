@@ -8,7 +8,7 @@ Installation
 Add it to your Gemfile:
 
 ```ruby
-gem "rules", :github => 'azach/rules'
+gem "rules"
 ```
 
 Update your schema:

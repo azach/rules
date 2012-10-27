@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Rules engine that allows you to add customizable business rules to any ActiveRecord model."
   s.description = "Rules engine that allows you to add customizable business rules to any ActiveRecord model."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "rails", "~> 3.2"
