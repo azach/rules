@@ -7,18 +7,9 @@ module Rules
       self.casting_method = ->(value) { value.is_a?(Date) ? value : Date.parse(value.to_s) }
     end
 
-    define_constant :now do
-      self.name = 'current time'
-      self.input_type = :datetime_select
-      self.evaluation_method = -> { Time.now.utc }
-      self.casting_method = ->(value) { value.is_a?(DateTime) ? value : DateTime.parse(value.to_s) }
-    end
-
-    define_constant :random do
-      self.name = 'random number (1-100)'
-      self.input_type = :number
-      self.evaluation_method = -> { Kernel.rand(100) }
-      self.casting_method = ->(value) { value.to_f }
+    define_constant :day_of_week do
+      self.name = 'day of week'
+      self.evaluation_method = -> { Date::DAYNAMES[Time.now.utc.to_date.wday] }
     end
   end
 end
