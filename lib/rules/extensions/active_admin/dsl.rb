@@ -12,7 +12,7 @@ ActiveAdmin::FormBuilder.class_eval do
   end
 
   def rules_parameter_collection(rule_set)
-    @rules_parameter_collection ||= Rules.constants.merge(rule_set.contexts).map {|key, const| [const.name, key] }
+    @rules_parameter_collection ||= Rules.constants.merge(rule_set.try(:contexts) || {}).map {|key, const| [const.name, key] }
   end
 end
 

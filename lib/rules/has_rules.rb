@@ -17,8 +17,8 @@ module Rules
       super || Rules::RuleSet.new
     end
 
-    def evaluate(options = {})
-      rule_set.evaluate(options)
+    def rules_pass?(options = {})
+      rule_set.nil? || rule_set.evaluate(options)
     end
   end
 end
