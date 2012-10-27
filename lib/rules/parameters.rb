@@ -1,5 +1,6 @@
 module Rules
   module Parameters
+    require 'rules/parameters/parameter'
     require 'rules/parameters/attribute'
     require 'rules/parameters/constant'
 

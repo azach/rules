@@ -1,6 +1,8 @@
+require 'rules/parameters/parameter'
+
 module Rules::Parameters
-  class Attribute
-    attr_reader :attribute, :name
+  class Attribute < Parameter
+    attr_reader :attribute
 
     def initialize(options = {})
       @name      = options[:name]
@@ -9,15 +11,6 @@ module Rules::Parameters
 
     def evaluate(context = {})
       context.fetch(attribute)
-    end
-
-    def cast(value)
-      # TODO
-      value
-    end
-
-    def to_s
-      @name
     end
   end
 end
