@@ -11,6 +11,8 @@ module Rules
 
     accepts_nested_attributes_for :rules, allow_destroy: true
 
+    validates :evaluation_logic, inclusion: {in: %w(all any)}, allow_nil: true
+
     def self.set_attributes_for(klass, klass_attributes)
       @attributes ||= {}
       @attributes[klass] = attributize(klass_attributes)
@@ -35,10 +37,14 @@ module Rules
 
     # TODO: Arbitrary rule set logic (Treetop)
     def evaluate(attributes = {})
-      rules.each do |rule|
-        return false unless rule.evaluate(attributes)
+      if evaluation_logic == 'any'
+        !!rules.detect { |rule| rule.evaluate(attributes) }
+      else
+        rules.each do |rule|
+          return false unless rule.evaluate(attributes)
+        end
+        true
       end
-      true
     end
   end
 end

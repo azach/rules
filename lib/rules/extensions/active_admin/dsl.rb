@@ -7,6 +7,7 @@ ActiveAdmin::FormBuilder.class_eval do
           rules_rule_form.input :evaluator, :as => :select, :collection => Rules.evaluators.map {|key, evaluator| [evaluator.name, key] }.sort_by {|name, key| name }
           rules_rule_form.input :rhs_parameter, :label => 'Right hand side'
         end
+        rules_rule_set_form.input :evaluation_logic, :as => :select, :label => 'Must match', collection: [['All Rules', 'all'], ['Any Rules', 'any']]
       end
     end
   end
@@ -18,7 +19,8 @@ end
 
 ActiveAdmin::Views::Pages::Show.class_eval do
   def show_rules
-    panel 'Rules' do
+    panel "Rules" do
+      div resource.rule_set.evaluation_logic == 'any' ? 'Must match any rule' : 'Must match all rules'
       table_for resource.rule_set.rules do |rule|
         column('Left hand side') { |rule| rule.lhs_parameter_object.to_s.titleize }
         column('Condition') { |rule| rule.get_evaluator }
