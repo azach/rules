@@ -150,9 +150,6 @@ describe Rules::Rule do
       rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'not_equals')
       rule.evaluate.should be_true
 
-      rule = Rules::Rule.new(lhs_parameter: 'random', rhs_parameter: 1000, evaluator: 'less_than')
-      rule.evaluate.should be_true
-
       rule_set.stub(contexts: {email_address: Rules::Parameters::Attribute.new(attribute: :email_address)})
       rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'matches', rule_set: rule_set)
       rule.evaluate(email_address: 'test@example.com').should be_true
@@ -165,12 +162,9 @@ describe Rules::Rule do
       rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'equals')
       rule.evaluate.should be_false
 
-      rule = Rules::Rule.new(lhs_parameter: 'random', rhs_parameter: 1000, evaluator: 'greater_than')
-      rule.evaluate.should be_false
-
       rule_set.stub(contexts: {email_address: Rules::Parameters::Attribute.new(attribute: :email_address)})
-      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set)
-      rule.evaluate(email_address: 'test@example.com').should be_false
+      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set) 
+     rule.evaluate(email_address: 'test@example.com').should be_false
     end
   end
 
