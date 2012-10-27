@@ -21,7 +21,7 @@ module Rules
       end
 
       def cast(value)
-        return value unless :casting_method
+        return value unless casting_method
         casting_method.call(value)
       end
     end
