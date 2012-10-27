@@ -45,7 +45,7 @@ For example:
 ```ruby
 order = Order.new
 order.email_address = "morbo@example.com"
-order.evaluate(customer_email: order.email_address)
+order.rules_pass?(customer_email: order.email_address)
 ```
 
 Defining Rules
