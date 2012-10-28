@@ -66,8 +66,7 @@ ActiveRecord::Schema.define(:version => 20120901044907) do
 
   create_table "rules_rules", :force => true do |t|
     t.integer  "rule_set_id"
-    t.string   "evaluator"
-    t.text     "parameters"
+    t.text     "expression"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end

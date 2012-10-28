@@ -18,10 +18,10 @@ describe Rules::RuleSet do
   end
 
   describe '#evaluate' do
-    let(:true_rule1) { Rules::Rule.new(lhs_parameter_key: 'today', evaluator: 'not_nil') }
-    let(:true_rule2) { Rules::Rule.new(lhs_parameter_key: nil, evaluator: 'nil') }
-    let(:false_rule1) { Rules::Rule.new(lhs_parameter_key: 'today', evaluator: 'nil') }
-    let(:false_rule2) { Rules::Rule.new(lhs_parameter_key: nil, evaluator: 'not_nil') }
+    let(:true_rule1) { Rules::Rule.new(lhs_parameter_key: 'today', evaluator_key: 'not_nil') }
+    let(:true_rule2) { Rules::Rule.new(lhs_parameter_key: nil, evaluator_key: 'nil') }
+    let(:false_rule1) { Rules::Rule.new(lhs_parameter_key: 'today', evaluator_key: 'nil') }
+    let(:false_rule2) { Rules::Rule.new(lhs_parameter_key: nil, evaluator_key: 'not_nil') }
 
     context 'when evaluation logic is all' do
       before { rule_set.evaluation_logic = 'all' }

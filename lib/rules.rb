@@ -1,4 +1,6 @@
 require 'rules/engine'
+require 'rules/extensions/active_model/absence_validator'
+require 'rules/extensions/active_model/parameter_key_validator'
 require 'rules/evaluators'
 require 'rules/evaluators/definitions'
 require 'rules/has_rules'
