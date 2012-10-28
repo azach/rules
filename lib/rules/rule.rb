@@ -28,11 +28,15 @@ module Rules
     end
 
     def lhs_parameter_key
-      expression[:lhs_parameter_key].blank? ? nil : expression[:lhs_parameter_key]
+      key_from_store :lhs_parameter_key
     end
 
     def rhs_parameter_key
-      expression[:rhs_parameter_key].blank? ? nil : expression[:rhs_parameter_key]
+      key_from_store :rhs_parameter_key
+    end
+
+    def evaluator_key
+      key_from_store :evaluator_key
     end
 
     def lhs_parameter_value(attributes = {})
@@ -72,6 +76,10 @@ module Rules
     end
 
     private
+
+    def key_from_store(key)
+      expression[key].blank? ? nil : expression[key]
+    end
 
     def parameter_from_key(key)
       if key
