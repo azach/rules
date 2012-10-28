@@ -1,6 +1,6 @@
 Rules
 =========
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/azach/rules)
+[![build status](https://secure.travis-ci.org/azach/rules.png?branch=master)](https://secure.travis-ci.org/azach/rules) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/azach/rules)
 
 A Ruby gem engine that allows you to add customizable business rules to any ActiveRecord model. Rules integrates with ActiveAdmin to make it trivial to allow admin users to create rules on the fly for your models.
 
