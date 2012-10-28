@@ -52,15 +52,11 @@ module Rules
     end
 
     def rhs_parameter
-      if rhs_parameter_key
-        parameter_from_key(rhs_parameter_key.to_sym)
-      else
-        rhs_parameter_raw
-      end
+      rhs_parameter_key ? parameter_from_key(rhs_parameter_key) : rhs_parameter_raw
     end
 
     def lhs_parameter
-      @lhs_parameter ||= parameter_from_key(lhs_parameter_key.try(:to_sym))
+      @lhs_parameter ||= lhs_parameter_key ? parameter_from_key(lhs_parameter_key) : nil
     end
 
     def valid_parameter_keys
@@ -82,11 +78,7 @@ module Rules
     end
 
     def parameter_from_key(key)
-      if key
-        Parameters.constants[key] || valid_attributes[key]
-      else
-        nil
-      end
+      Parameters.constants[key.to_sym] || valid_attributes[key.to_sym]
     end
   end
 end
