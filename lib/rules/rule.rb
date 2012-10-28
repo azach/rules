@@ -1,5 +1,6 @@
 require 'rules/evaluators'
 require 'rules/parameters'
+require 'rules/extensions/active_model/absence_validator'
 
 module Rules
   class Rule < ActiveRecord::Base
@@ -10,7 +11,7 @@ module Rules
     validates :evaluator, presence: true, inclusion: {in: Evaluators.list.keys.map(&:to_s)}
     validates :lhs_parameter, presence: true, inclusion: {in: ->(rule) { rule.valid_parameters }}
     validates :rhs_parameter, presence: true, if: ->(rule) { rule.get_evaluator.try(:requires_rhs?) }
-    validates :rhs_parameter, inclusion: {in: [nil, ''], message: 'must be blank for this evaluation method'}, unless: ->(rule) { rule.get_evaluator.try(:requires_rhs?) }
+    validates :rhs_parameter, absence: true, unless: ->(rule) { rule.get_evaluator.try(:requires_rhs?) }
 
     store :parameters, :accessors => [:lhs_parameter, :rhs_parameter]
 

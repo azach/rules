@@ -34,7 +34,7 @@ describe Rules::Rule do
     it 'require a blank rhs parameter if the evaluator does not require one' do
       rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter: lhs, rhs_parameter: rhs)
       rule.should_not be_valid
-      rule.errors[:rhs_parameter].should include("must be blank for this evaluation method")
+      rule.errors[:rhs_parameter].should include("must be blank")
     end
 
     it 'allows a lhs parameter with a valid constant key' do
