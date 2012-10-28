@@ -8,51 +8,51 @@ describe Rules::Rule do
 
   describe 'validations' do
     it 'requires a valid evaluator' do
-      rule = Rules::Rule.new(evaluator: 'fake', lhs_parameter: nil, rhs_parameter: nil)
+      rule = Rules::Rule.new(evaluator: 'fake', lhs_parameter_key: nil, rhs_parameter: nil)
       rule.should_not be_valid
       rule.errors[:evaluator].should include("is not included in the list")
     end
 
     it 'requires a lhs parameter' do
-      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter: nil, rhs_parameter: nil)
+      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter_key: nil, rhs_parameter: nil)
       rule.should_not be_valid
-      rule.errors[:lhs_parameter].should include("is not included in the list")
+      rule.errors[:lhs_parameter_key].should include("is not included in the list")
     end
 
     it 'requires a valid lhs parameter' do
-      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter: 'fake', rhs_parameter: nil)
+      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter_key: 'fake', rhs_parameter: nil)
       rule.should_not be_valid
-      rule.errors[:lhs_parameter].should include("is not included in the list")
+      rule.errors[:lhs_parameter_key].should include("is not included in the list")
     end
 
     it 'requires a rhs parameter if the evaluator requires one' do
-      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter: lhs, rhs_parameter: nil)
+      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter_key: lhs, rhs_parameter: nil)
       rule.should_not be_valid
       rule.errors[:rhs_parameter].should include("can't be blank")
     end
 
     it 'require a blank rhs parameter if the evaluator does not require one' do
-      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter: lhs, rhs_parameter: rhs)
+      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter_key: lhs, rhs_parameter: rhs)
       rule.should_not be_valid
       rule.errors[:rhs_parameter].should include("must be blank")
     end
 
     it 'allows a lhs parameter with a valid constant key' do
-      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter: 'today')
+      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter_key: 'today')
       rule.should be_valid
     end
 
     it 'allows a lhs parameter with a valid attribute key' do
       rule_set.stub(attributes: {current_user: 'The current user'})
-      rule = Rules::Rule.new(rule_set: rule_set, evaluator: 'nil', lhs_parameter: 'current_user')
+      rule = Rules::Rule.new(rule_set: rule_set, evaluator: 'nil', lhs_parameter_key: 'current_user')
       rule.should be_valid
     end
 
     it 'is valid for well defined rules' do
-      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter: lhs, rhs_parameter: rhs)
+      rule = Rules::Rule.new(evaluator: evaluator, lhs_parameter_key: lhs, rhs_parameter: rhs)
       rule.should be_valid
 
-      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter: lhs, rhs_parameter: nil)
+      rule = Rules::Rule.new(evaluator: 'nil', lhs_parameter_key: lhs, rhs_parameter: nil)
       rule.should be_valid
     end
   end
@@ -71,12 +71,12 @@ describe Rules::Rule do
 
   describe '#lhs_parameter_value' do
     it 'returns nil if the parameter key does not have a corresponding attribute' do
-      rule = Rules::Rule.new(lhs_parameter: 'fake')
+      rule = Rules::Rule.new(lhs_parameter_key: 'fake')
       rule.lhs_parameter_value.should be_nil
     end
 
     it 'returns the evaluated attribute for a constant key' do
-      rule = Rules::Rule.new(lhs_parameter: 'today')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today')
       rule.lhs_parameter_value.should == Time.now.utc.to_date
     end
 
@@ -85,7 +85,7 @@ describe Rules::Rule do
       current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
       rule_set.stub(attributes: {current_user: current_user_attribute})
 
-      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
+      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter_key: 'current_user')
 
       rule.lhs_parameter_value({
         current_user: current_user,
@@ -97,7 +97,7 @@ describe Rules::Rule do
       current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
       rule_set.stub(attributes: {current_user: current_user_attribute})
 
-      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
+      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter_key: 'current_user')
 
       expect {
         rule.lhs_parameter_value(current_price: 10)
@@ -112,58 +112,58 @@ describe Rules::Rule do
     end
 
     it 'raises an error for rhs parameters that can not be cast' do
-      rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 'four score and seven years ago')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter: 'four score and seven years ago')
       expect {
         rule.rhs_parameter_value
       }.to raise_error
     end
 
     it 'casts the rhs parameter into the format required by the lhs parameter' do
-      rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: '2012-01-01')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter: '2012-01-01')
       rule.rhs_parameter_value.should == Date.parse('2012-01-01')
     end
   end
 
-  describe '#lhs_parameter_object' do
+  describe '#lhs_parameter' do
     it 'returns nil if the parameter key does not have a corresponding attribute' do
-      rule = Rules::Rule.new(lhs_parameter: 'fake')
-      rule.lhs_parameter_object.should be_nil
+      rule = Rules::Rule.new(lhs_parameter_key: 'fake')
+      rule.lhs_parameter.should be_nil
     end
 
     it 'returns the constant for the parameter key if defined' do
-      rule = Rules::Rule.new(lhs_parameter: lhs)
-      rule.lhs_parameter_object.should be_kind_of(Rules::Parameters::Constant)
+      rule = Rules::Rule.new(lhs_parameter_key: lhs)
+      rule.lhs_parameter.should be_kind_of(Rules::Parameters::Constant)
     end
 
     it 'returns the attribute for the parameter key if defined' do
       rule_set.stub(attributes: {current_user: Rules::Parameters::Attribute.new(key: :current_user)})
-      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter: 'current_user')
-      rule.lhs_parameter_object.should be_kind_of(Rules::Parameters::Attribute)
+      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter_key: 'current_user')
+      rule.lhs_parameter.should be_kind_of(Rules::Parameters::Attribute)
     end
   end
 
   describe '#evaluate' do
     it 'returns true for rules that meet the conditions' do
-      rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: Time.now.utc.to_date, evaluator: 'equals')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter: Time.now.utc.to_date, evaluator: 'equals')
       rule.evaluate.should be_true
 
-      rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'not_equals')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'not_equals')
       rule.evaluate.should be_true
 
       rule_set.stub(attributes: {email_address: Rules::Parameters::Attribute.new(key: :email_address)})
-      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'matches', rule_set: rule_set)
+      rule = Rules::Rule.new(lhs_parameter_key: :email_address, rhs_parameter: /example.com$/, evaluator: 'matches', rule_set: rule_set)
       rule.evaluate(email_address: 'test@example.com').should be_true
     end
 
     it 'returns false for rules that do not meet the conditions' do
-      rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: Time.now.utc.to_date, evaluator: 'not_equals')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter: Time.now.utc.to_date, evaluator: 'not_equals')
       rule.evaluate.should be_false
 
-      rule = Rules::Rule.new(lhs_parameter: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'equals')
+      rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter: 2.weeks.ago.to_s, evaluator: 'equals')
       rule.evaluate.should be_false
 
       rule_set.stub(attributes: {email_address: Rules::Parameters::Attribute.new(key: :email_address)})
-      rule = Rules::Rule.new(lhs_parameter: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set)
+      rule = Rules::Rule.new(lhs_parameter_key: :email_address, rhs_parameter: /example.com$/, evaluator: 'not_matches', rule_set: rule_set)
      rule.evaluate(email_address: 'test@example.com').should be_false
     end
   end
