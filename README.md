@@ -71,6 +71,16 @@ This will give you something like:
 
 ![ActiveAdmin form for editing rules](https://github.com/azach/rules/raw/master/spec/dummy/app/assets/images/edit_example.png)
 
+Configuration
+------------
+You can add an initializer to configure default options.
+
+```ruby
+Rules.configure do |config|
+  config.errors_are_false = true  # return false if an evaluator raises an error (true by default)
+end
+```
+
 Default Constants
 ------------
 TODO

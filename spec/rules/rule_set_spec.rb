@@ -31,12 +31,12 @@ describe Rules::RuleSet do
       before { rule_set.evaluation_logic = 'all' }
 
       it 'returns true if all rules are true' do
-        rule_set.rules << [true_rule1, true_rule2]
+        rule_set.rules += [true_rule1, true_rule2]
         rule_set.evaluate.should be_true
       end
 
       it 'returns false if any rules are false' do
-        rule_set.rules << [true_rule1, false_rule1]
+        rule_set.rules += [true_rule1, false_rule1]
         rule_set.evaluate.should be_false
       end
     end
@@ -45,17 +45,17 @@ describe Rules::RuleSet do
       before { rule_set.evaluation_logic = 'any' }
 
       it 'returns true if all rules are true' do
-        rule_set.rules << [true_rule1, true_rule2]
+        rule_set.rules += [true_rule1, true_rule2]
         rule_set.evaluate.should be_true
       end
 
       it 'returns true if a single rule is true' do
-        rule_set.rules << [false_rule1, true_rule1]
+        rule_set.rules += [false_rule1, true_rule1]
         rule_set.evaluate.should be_true
       end
 
       it 'returns false if all rules are false' do
-        rule_set.rules << [false_rule1, false_rule2]
+        rule_set.rules += [false_rule1, false_rule2]
         rule_set.evaluate.should be_false
       end
     end
