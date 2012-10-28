@@ -72,6 +72,30 @@ This will give you something like:
 
 ![ActiveAdmin form for editing rules](https://github.com/azach/rules/raw/master/spec/dummy/app/assets/images/edit_example.png)
 
+However, rules are defined using keys and values, so you can easily use your own custom solution.
+
+```ruby
+rule = Rules::Rule.new(lhs_parameter_key: 'day_of_week', evaluator_key: 'equals', rhs_parameter_raw: 'Sunday')
+rule.lhs_parameter_value
+=> 'Sunday' # (or the current day of week)
+rule.evaluate
+=> true
+
+Order.has_rule_attributes(customer_email: { name: "Customer's email address" })
+order = Order.new
+rule_set = Rules::RuleSet.new(source: order)
+
+rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter_key: 'customer_email', evaluator_key: 'matches', rhs_parameter_raw: 'example.com$')
+rule.lhs_parameter_value
+=> nil  # we didn't pass anything in
+rule.rhs_parameter_value
+=> /example.com$/  # this is a Regexp class
+rule.evaluate(customer_email: 'john@example.com')
+=> true
+rule.evaluate(customer_email: 'john@example.net')
+=> false
+```
+
 Configuration
 ------------
 You can add an initializer to configure default options.

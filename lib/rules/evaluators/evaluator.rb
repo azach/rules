@@ -1,7 +1,7 @@
 module Rules
   module Evaluators
     class Evaluator
-      attr_accessor :evaluation_method, :requires_rhs, :name
+      attr_accessor :evaluation_method, :requires_rhs, :type_for_rhs, :name
 
       def initialize(key)
         @name = key.to_s

@@ -35,14 +35,16 @@ module Rules
     end
 
     define_evaluator :matches do
-      self.evaluation_method = ->(lhs, rhs) { !!(lhs =~ Regexp.new(rhs)) }
+      self.evaluation_method = ->(lhs, rhs) { !!(lhs =~ rhs) }
       self.name = 'matches'
+      self.type_for_rhs = :regexp
       self.requires_rhs = true
     end
 
     define_evaluator :not_matches do
-      self.evaluation_method = ->(lhs, rhs) { !(lhs =~ Regexp.new(rhs)) }
+      self.evaluation_method = ->(lhs, rhs) { !(lhs =~ rhs) }
       self.name = 'does not match'
+      self.type_for_rhs = :regexp
       self.requires_rhs = true
     end
 

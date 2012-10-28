@@ -128,6 +128,11 @@ describe Rules::Rule do
         rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter_raw: '2012-01-01')
         rule.rhs_parameter_value.should == Date.parse('2012-01-01')
       end
+
+      it 'casts the rhs parameter into the format required by the evaluator' do
+        rule = Rules::Rule.new(evaluator_key: 'matches', rhs_parameter_raw: 'test$')
+        rule.rhs_parameter_value.should == Regexp.new('test$')
+      end
     end
 
     context 'with a parameter key' do

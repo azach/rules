@@ -44,10 +44,11 @@ module Rules
     end
 
     def rhs_parameter_value(attributes = {})
-      rhv = if rhs_parameter.respond_to?(:evaluate)
+      if rhs_parameter.respond_to?(:evaluate)
         rhs_parameter.try(:evaluate, attributes)
       else
-        Parameters::Parameter.cast(rhs_parameter, lhs_parameter.try(:type))
+        rhv = Parameters::Parameter.cast(rhs_parameter_raw, lhs_parameter.try(:type))
+        Parameters::Parameter.cast(rhv, evaluator.try(:type_for_rhs))
       end
     end
 
