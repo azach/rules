@@ -37,6 +37,7 @@ module Rules
 
     # TODO: Arbitrary rule set logic (Treetop)
     def evaluate(attributes = {})
+      return true unless rules.any?
       if evaluation_logic == 'any'
         !!rules.detect { |rule| rule.evaluate(attributes) }
       else

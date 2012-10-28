@@ -23,6 +23,10 @@ describe Rules::RuleSet do
     let(:false_rule1) { Rules::Rule.new(lhs_parameter_key: 'today', evaluator_key: 'nil') }
     let(:false_rule2) { Rules::Rule.new(lhs_parameter_key: nil, evaluator_key: 'not_nil') }
 
+    it 'returns true if there are no rules' do
+      rule_set.evaluate.should be_true
+    end
+
     context 'when evaluation logic is all' do
       before { rule_set.evaluation_logic = 'all' }
 
