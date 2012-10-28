@@ -172,6 +172,7 @@ DEPENDENCIES
   coffee-rails
   formtastic
   haml
+  jdbc-sqlite3
   jquery-rails
   rspec-rails
   rules!
