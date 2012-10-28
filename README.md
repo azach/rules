@@ -34,6 +34,7 @@ class Order < ActiveRecord::Base
   has_rule_attributes({
     customer_email: {
       name: "customer email address"
+      type: :string   # see Rules::Parameters::Parameter::VALID_TYPES for a full list
     }
   })
 end

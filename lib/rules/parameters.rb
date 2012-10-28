@@ -12,7 +12,7 @@ module Rules
 
     def self.define_constant(key, &block)
       raise "Constant #{key} already exists" if @@constants[key]
-      constant = Constant.new(key)
+      constant = Constant.new(key: key)
       constant.instance_eval(&block) if block_given?
       @@constants[key] = constant
     end

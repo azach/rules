@@ -47,7 +47,7 @@ module Rules
       rhv = if rhs_parameter.respond_to?(:evaluate)
         rhs_parameter.try(:evaluate, attributes)
       else
-        lhs_parameter ? lhs_parameter.cast(rhs_parameter) : rhs_parameter
+        Parameters::Parameter.cast(rhs_parameter, lhs_parameter.try(:type))
       end
     end
 
