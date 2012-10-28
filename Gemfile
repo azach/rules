@@ -13,10 +13,10 @@ gem "haml"
 gem "jquery-rails"
 gem "sass-rails"
 
-gem "sqlite3", platform: [:ruby, :mswin, :mingw]
+gem "sqlite3", platforms: [:ruby, :mswin, :mingw]
 
 # for JRuby
-gem "jdbc-sqlite3", platform: :jruby
+gem "jdbc-sqlite3", platforms: :jruby
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or
