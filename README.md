@@ -77,7 +77,8 @@ You can add an initializer to configure default options.
 
 ```ruby
 Rules.configure do |config|
-  config.errors_are_false = true  # return false if an evaluator raises an error (true by default)
+  config.errors_are_false           = true  # return false if an evaluator raises an error (true by default)
+  config.missing_attributes_are_nil = true  # return nil when a value is not passed for an attribute parameter
 end
 ```
 

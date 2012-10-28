@@ -108,17 +108,6 @@ describe Rules::Rule do
         current_price: 10
       }).should == current_user
     end
-
-    it 'raises an error if the necessary attributes are not provided for an attribute' do
-      current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
-      rule_set.stub(attributes: {current_user: current_user_attribute})
-
-      rule = Rules::Rule.new(rule_set: rule_set, lhs_parameter_key: 'current_user')
-
-      expect {
-        rule.lhs_parameter_value(current_price: 10)
-      }.to raise_error KeyError
-    end
   end
 
   describe '#rhs_parameter_value' do
@@ -163,17 +152,6 @@ describe Rules::Rule do
           current_user: current_user,
           current_price: 10
         }).should == current_user
-      end
-
-      it 'raises an error if the necessary attributes are not provided for an attribute' do
-        current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
-        rule_set.stub(attributes: {current_user: current_user_attribute})
-
-        rule = Rules::Rule.new(rule_set: rule_set, rhs_parameter_key: 'current_user')
-
-        expect {
-          rule.rhs_parameter_value(current_price: 10)
-        }.to raise_error KeyError
       end
     end
   end
