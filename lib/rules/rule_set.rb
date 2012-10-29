@@ -13,13 +13,14 @@ module Rules
 
     validates :evaluation_logic, inclusion: {in: %w(all any)}, allow_nil: true
 
+    @@attributes = Hash.new({})
+
     def self.set_attributes_for(klass, klass_attributes)
-      @attributes ||= {}
-      @attributes[klass] = (@attributes[klass] || {}).merge(attributize(klass_attributes))
+      @@attributes[klass] = @@attributes[klass].merge(attributize(klass_attributes))
     end
 
     def self.attributes
-      @attributes || {}
+      @@attributes
     end
 
     def self.attributize(attributes_hash)
@@ -31,8 +32,7 @@ module Rules
     end
 
     def attributes
-      return {} unless source
-      self.class.attributes[source.class] || {}
+      self.class.attributes[source.class]
     end
 
     # TODO: Arbitrary rule set logic (Treetop)

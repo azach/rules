@@ -14,7 +14,7 @@ module Rules
     end
 
     def rule_set
-      super || Rules::RuleSet.new
+      super || self.build_rule_set
     end
 
     def rules_pass?(options = {})

@@ -7,8 +7,8 @@ describe Rules::RuleSet do
   before { stub_const('FakeClass', Class.new) }
 
   describe '.set_attributes_for' do
-    it 'returns nil if there are no attributes for the given class' do
-      Rules::RuleSet.attributes[FakeClass].should be_nil
+    it 'returns an empty hash if there are no attributes for the given class' do
+      Rules::RuleSet.attributes[FakeClass].should == {}
     end
 
     it 'stores the list of attributes for the specified class' do
