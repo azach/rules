@@ -15,6 +15,12 @@ describe Rules::RuleSet do
       Rules::RuleSet.set_attributes_for(FakeClass, attributes)
       Rules::RuleSet.attributes[FakeClass].should have(2).attributes
     end
+
+    it 'appends new attributes when called multiple times' do
+      Rules::RuleSet.set_attributes_for(FakeClass, attributes)
+      Rules::RuleSet.set_attributes_for(FakeClass, {attribute3: {name: 'name of attribute 3'}})
+      Rules::RuleSet.attributes[FakeClass].should have(3).attributes
+    end
   end
 
   describe '#evaluate' do

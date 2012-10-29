@@ -15,7 +15,7 @@ module Rules
 
     def self.set_attributes_for(klass, klass_attributes)
       @attributes ||= {}
-      @attributes[klass] = attributize(klass_attributes)
+      @attributes[klass] = (@attributes[klass] || {}).merge(attributize(klass_attributes))
     end
 
     def self.attributes
