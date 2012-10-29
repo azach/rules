@@ -13,7 +13,7 @@ module Rules
     validates :rhs_parameter_key, presence: true, if: :requires_rhs?, unless: :rhs_parameter_raw
     validates :rhs_parameter_key, absence: true, unless: :requires_rhs?
     validates :rhs_parameter_raw, absence: true, unless: :requires_rhs?
-    validates :rhs_parameter_raw, absence: true, if: :rhs_parameter_key
+    validates :rhs_parameter_key, absence: true, if: :rhs_parameter_raw
 
     store :expression, :accessors => [:evaluator_key, :lhs_parameter_key, :rhs_parameter_key, :rhs_parameter_raw]
 

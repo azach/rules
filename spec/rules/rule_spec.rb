@@ -47,7 +47,7 @@ describe Rules::Rule do
     it 'requires that only one of the rhs parameter key or raw value are set' do
       rule = Rules::Rule.new(evaluator_key: evaluator_key, lhs_parameter_key: lhs, rhs_parameter_key: rhs_key, rhs_parameter_raw: rhs_raw)
       rule.should_not be_valid
-      rule.errors[:rhs_parameter_raw].should include("must be blank")
+      rule.errors[:rhs_parameter_key].should include("must be blank")
     end
 
     it 'allows a lhs parameter with a valid constant key' do

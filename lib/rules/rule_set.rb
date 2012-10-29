@@ -11,7 +11,7 @@ module Rules
 
     accepts_nested_attributes_for :rules, allow_destroy: true
 
-    validates :evaluation_logic, inclusion: {in: %w(all any)}, allow_nil: true
+    validates_inclusion_of :evaluation_logic, in: %w(all any), allow_nil: true, allow_blank: true
 
     @@attributes = Hash.new({})
 
@@ -32,7 +32,9 @@ module Rules
     end
 
     def attributes
-      self.class.attributes[source.class]
+      source_klass = source ? source.class : source_type.try(:constantize)
+      return {} unless source_klass
+      self.class.attributes[source_klass]
     end
 
     # TODO: Arbitrary rule set logic (Treetop)

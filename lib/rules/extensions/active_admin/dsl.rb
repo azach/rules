@@ -3,10 +3,10 @@ ActiveAdmin::FormBuilder.class_eval do
     inputs 'Rules' do
       semantic_fields_for :rule_set do |rules_rule_set_form|
         rules_rule_set_form.has_many :rules do |rules_rule_form|
-          rules_rule_form.input :lhs_parameter_key, :label => 'Left hand side', collection: rules_parameter_collection(rules_rule_form.object.rule_set)
+          rules_rule_form.input :lhs_parameter_key, :label => 'Left hand side', collection: rules_parameter_collection(object.rule_set)
           rules_rule_form.input :evaluator_key, :label => 'Evaluator', :as => :select, :collection => Rules.evaluators.map {|key, evaluator| [evaluator.name, key] }.sort_by {|name, key| name }
-          rules_rule_form.input :rhs_parameter_key, :label => 'Choose a value', collection: rules_parameter_collection(rules_rule_form.object.rule_set)
-          rules_rule_form.input :rhs_parameter_raw, :label => 'Enter a value'
+          rules_rule_form.input :rhs_parameter_key, :label => 'Choose a value', collection: rules_parameter_collection(object.rule_set)
+          rules_rule_form.input :rhs_parameter_raw, :label => 'Or enter a value'
         end
         rules_rule_set_form.input :evaluation_logic, :as => :select, :label => 'Must match', collection: [['All Rules', 'all'], ['Any Rules', 'any']]
       end
