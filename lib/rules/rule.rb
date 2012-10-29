@@ -15,7 +15,7 @@ module Rules
     validates :rhs_parameter_raw, absence: true, unless: :requires_rhs?
     validates :rhs_parameter_raw, absence: true, if: :rhs_parameter_key
 
-    store :expression, :accessors => [:evaluator_key, :lhs_parameter_key, :rhs_parameter_key, :rhs_parameter_raw]
+    store :extra, :accessors => [:rhs_parameter_raw]
 
     def evaluate(attributes = {})
       lhv = lhs_parameter_value(attributes)
@@ -25,18 +25,6 @@ module Rules
 
     def evaluator
       @evaluator ||= evaluator_key ? Evaluators.list[evaluator_key.to_sym] : nil
-    end
-
-    def lhs_parameter_key
-      key_from_store :lhs_parameter_key
-    end
-
-    def rhs_parameter_key
-      key_from_store :rhs_parameter_key
-    end
-
-    def evaluator_key
-      key_from_store :evaluator_key
     end
 
     def lhs_parameter_value(attributes = {})
@@ -73,10 +61,6 @@ module Rules
     end
 
     private
-
-    def key_from_store(key)
-      expression[key].blank? ? nil : expression[key]
-    end
 
     def parameter_from_key(key)
       Parameters.constants[key.to_sym] || valid_attributes[key.to_sym]
