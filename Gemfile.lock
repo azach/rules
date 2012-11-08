@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rules (0.0.1)
+    rules (0.1.0)
       rails (~> 3.2)
 
 GEM
