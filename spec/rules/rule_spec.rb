@@ -252,6 +252,11 @@ describe Rules::Rule do
       rule.valid_attributes.should be_empty
     end
 
+    it 'returns the right attribute list when the associated rule set is unsaved' do
+      rule = Order.new.rule_set.rules.build
+      rule.valid_attributes.should_not be_empty
+    end
+
     it 'returns a list of attributes for a rule set' do
       rule_set.stub(attributes: {current_user: mock('attribute'), order_price: mock('attribute')})
       rule = Rules::Rule.new(rule_set: rule_set)

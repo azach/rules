@@ -72,6 +72,10 @@ module Rules
       evaluator ? evaluator.requires_rhs? : false
     end
 
+    def rule_set
+      super || ObjectSpace.each_object(RuleSet).detect { |rs| rs.rules.include?(self) }
+    end
+
     private
 
     def key_from_store(key)

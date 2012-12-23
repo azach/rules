@@ -3,7 +3,7 @@ require 'rules/parameters/attribute'
 
 module Rules
   class RuleSet < ActiveRecord::Base
-    attr_accessible :rules, :evaluation_logic, :rules_attributes
+    attr_accessible :rules, :evaluation_logic, :rules_attributes, :source
 
     belongs_to :source, polymorphic: true
 
