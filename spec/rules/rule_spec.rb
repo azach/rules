@@ -97,7 +97,7 @@ describe Rules::Rule do
     end
 
     it 'returns the right value for an attribute' do
-      current_user = mock('current user')
+      current_user = double('current user')
       current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
       rule_set.stub(attributes: {current_user: current_user_attribute})
 
@@ -147,7 +147,7 @@ describe Rules::Rule do
       end
 
       it 'returns the right value for an attribute' do
-        current_user = mock('current user')
+        current_user = double('current user')
         current_user_attribute = Rules::Parameters::Attribute.new(key: :current_user, name: 'the current user')
         rule_set.stub(attributes: {current_user: current_user_attribute})
 
@@ -214,30 +214,30 @@ describe Rules::Rule do
 
     it 'returns true for rules that meet the conditions' do
       rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter_raw: Time.now.utc.to_date, evaluator_key: 'equals')
-      rule.evaluate.should be_true
+      rule.evaluate.should be_truthy
 
       rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter_raw: 2.weeks.ago.to_s, evaluator_key: 'not_equals')
-      rule.evaluate.should be_true
+      rule.evaluate.should be_truthy
 
       rule = Rules::Rule.new(lhs_parameter_key: :email_address, rhs_parameter_raw: /example.com$/, evaluator_key: 'matches', rule_set: rule_set)
-      rule.evaluate(email_address: 'test@example.com').should be_true
+      rule.evaluate(email_address: 'test@example.com').should be_truthy
 
       rule = Rules::Rule.new(lhs_parameter_key: :email_address, rhs_parameter_key: :name, evaluator_key: 'contains', rule_set: rule_set)
-      rule.evaluate(email_address: 'sally@example.com', name: 'sally').should be_true
+      rule.evaluate(email_address: 'sally@example.com', name: 'sally').should be_truthy
     end
 
     it 'returns false for rules that do not meet the conditions' do
       rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter_raw: Time.now.utc.to_date, evaluator_key: 'not_equals')
-      rule.evaluate.should be_false
+      rule.evaluate.should be_falsey
 
       rule = Rules::Rule.new(lhs_parameter_key: 'today', rhs_parameter_raw: 2.weeks.ago.to_s, evaluator_key: 'equals')
-      rule.evaluate.should be_false
+      rule.evaluate.should be_falsey
 
       rule = Rules::Rule.new(lhs_parameter_key: :email_address, rhs_parameter_raw: /example.com$/, evaluator_key: 'not_matches', rule_set: rule_set)
-      rule.evaluate(email_address: 'test@example.com').should be_false
+      rule.evaluate(email_address: 'test@example.com').should be_falsey
 
       rule = Rules::Rule.new(lhs_parameter_key: :email_address, rhs_parameter_key: :name, evaluator_key: 'contains', rule_set: rule_set)
-      rule.evaluate(email_address: 'sally@example.com', name: 'terry').should be_false
+      rule.evaluate(email_address: 'sally@example.com', name: 'terry').should be_falsey
     end
   end
 
@@ -258,7 +258,7 @@ describe Rules::Rule do
     end
 
     it 'returns a list of attributes for a rule set' do
-      rule_set.stub(attributes: {current_user: mock('attribute'), order_price: mock('attribute')})
+      rule_set.stub(attributes: {current_user: double('attribute'), order_price: double('attribute')})
       rule = Rules::Rule.new(rule_set: rule_set)
       rule.should have(2).valid_attributes
     end
