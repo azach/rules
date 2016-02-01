@@ -30,7 +30,7 @@ describe Rules::RuleSet do
     let(:false_rule2) { Rules::Rule.new(lhs_parameter_key: nil, evaluator_key: 'not_nil') }
 
     it 'returns true if there are no rules' do
-      rule_set.evaluate.should be_true
+      rule_set.evaluate.should be_truthy
     end
 
     context 'when evaluation logic is all' do
@@ -38,12 +38,12 @@ describe Rules::RuleSet do
 
       it 'returns true if all rules are true' do
         rule_set.rules += [true_rule1, true_rule2]
-        rule_set.evaluate.should be_true
+        rule_set.evaluate.should be_truthy
       end
 
       it 'returns false if any rules are false' do
         rule_set.rules += [true_rule1, false_rule1]
-        rule_set.evaluate.should be_false
+        rule_set.evaluate.should be_falsey
       end
     end
 
@@ -52,17 +52,17 @@ describe Rules::RuleSet do
 
       it 'returns true if all rules are true' do
         rule_set.rules += [true_rule1, true_rule2]
-        rule_set.evaluate.should be_true
+        rule_set.evaluate.should be_truthy
       end
 
       it 'returns true if a single rule is true' do
         rule_set.rules += [false_rule1, true_rule1]
-        rule_set.evaluate.should be_true
+        rule_set.evaluate.should be_truthy
       end
 
       it 'returns false if all rules are false' do
         rule_set.rules += [false_rule1, false_rule2]
-        rule_set.evaluate.should be_false
+        rule_set.evaluate.should be_falsey
       end
     end
   end

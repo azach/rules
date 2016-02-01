@@ -1,3 +1,5 @@
+require 'protected_attributes'
+
 require 'rules/engine'
 require 'rules/extensions/active_model/absence_validator'
 require 'rules/extensions/active_model/parameter_key_validator'

@@ -22,7 +22,7 @@ describe Rules::Evaluators::Evaluator do
       before { evaluator.evaluation_method = ->(lhv, rhv) { raise 'oh noes' } }
 
       it 'returns false by default' do
-        evaluator.evaluate(lhv, rhv).should be_false
+        evaluator.evaluate(lhv, rhv).should be_falsey
       end
 
       it 'raises the error if the errors_are_false config option is false' do
