@@ -3,8 +3,6 @@ require 'rules/parameters'
 
 module Rules
   class Rule < ActiveRecord::Base
-    attr_accessible :rule_set, :evaluator_key, :lhs_parameter_key, :rhs_parameter_key, :rhs_parameter_raw
-
     belongs_to :rule_set, class_name: 'Rules::RuleSet'
 
     validates :evaluator_key, presence: true, inclusion: {in: Evaluators.list.keys.map(&:to_s)}
