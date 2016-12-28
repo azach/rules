@@ -13,6 +13,7 @@ gem "formtastic"
 gem "haml"
 gem "jquery-rails"
 gem "sass-rails"
+gem "rails", '~> 4.1.0'
 
 gem "sqlite3", platforms: [:ruby, :mswin, :mingw]
 
