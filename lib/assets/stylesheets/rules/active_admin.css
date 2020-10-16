@@ -1,0 +1,13 @@
+.has_many_container.rules h3 {
+  display: none;
+}
+
+.has_many_container fieldset {
+  margin-left: 2em;
+}
+.has_many_container.rules a.button.has_many_add {
+    margin-left: 2em;
+}
+fieldset.inputs.rules > ol > li.select.input.optional {
+    margin-left: 1em;
+}
