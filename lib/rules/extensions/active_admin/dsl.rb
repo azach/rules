@@ -1,8 +1,12 @@
+HAS_MANY_OPTIONS = {
+  allow_destroy: true
+}
+
 ActiveAdmin::FormBuilder.class_eval do
   def has_rules
-    inputs 'Rules' do
-      semantic_fields_for :rule_set do |rules_rule_set_form|
-        rules_rule_set_form.has_many :rules do |rules_rule_form|
+    inputs('Rules', { class: 'inputs rules' }) do
+      semantic_fields_for(:rule_set) do |rules_rule_set_form|
+        rules_rule_set_form.has_many(:rules, HAS_MANY_OPTIONS) do |rules_rule_form|
           rules_rule_form.input :lhs_parameter_key, :label => 'Left hand side', collection: rules_parameter_collection(object.rule_set)
           rules_rule_form.input :evaluator_key, :label => 'Evaluator', :as => :select, :collection => Rules.evaluators.map {|key, evaluator| [evaluator.name, key, {:'data-requires-rhs' => evaluator.requires_rhs?}] }.sort_by {|name, key| name }
           rules_rule_form.input :rhs_parameter_raw, :label => 'Enter a value', :wrapper_html => { :class => "rules_rhs_parameter" }
