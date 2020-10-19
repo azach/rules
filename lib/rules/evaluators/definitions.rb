@@ -24,13 +24,13 @@ module Rules
 
     define_evaluator :nil do
       self.evaluation_method = ->(lhs) { lhs.nil? }
-      self.name = 'exists'
+      self.name = 'does not exist'
       self.requires_rhs = false
     end
 
     define_evaluator :not_nil do
       self.evaluation_method = ->(lhs) { !lhs.nil? }
-      self.name = 'does not exist'
+      self.name = 'exists'
       self.requires_rhs = false
     end
 
