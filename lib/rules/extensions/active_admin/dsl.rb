@@ -10,7 +10,7 @@ ActiveAdmin::FormBuilder.class_eval do
           rules_rule_form.input :lhs_parameter_key, :label => 'Left hand side', collection: rules_parameter_collection(object.rule_set)
           rules_rule_form.input :evaluator_key, :label => 'Evaluator', :as => :select, :collection => Rules.evaluators.map {|key, evaluator| [evaluator.name, key, {:'data-requires-rhs' => evaluator.requires_rhs?}] }.sort_by {|name, key| name }
           rules_rule_form.input :rhs_parameter_raw, :label => 'Enter a value', :wrapper_html => { :class => "rules_rhs_parameter" }
-          rules_rule_form.input :rhs_parameter_key, :label => 'Or choose a value', collection: rules_parameter_collection(object.rule_set), :wrapper_html => { :class => "rules_rhs_parameter" }
+          # rules_rule_form.input :rhs_parameter_key, :label => 'Or choose a value', collection: rules_parameter_collection(object.rule_set), :wrapper_html => { :class => "rules_rhs_parameter" }
         end
         rules_rule_set_form.input :evaluation_logic, :as => :select, :label => 'Must match', collection: [['All Rules', 'all'], ['Any Rules', 'any']]
       end
