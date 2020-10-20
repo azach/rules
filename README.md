@@ -84,7 +84,13 @@ show_rules
 For the form action:
 
 ```ruby
-f.has_rules
+f.has_rules(options) # options is optional, see below for values
+
+# values for options hash:
+# {
+#   constants (boolean, defaults to true):
+#     -> When :constants is false, suppress global, default parameters like day_of_week.
+# }
 ```
 
 This will give you something like:
@@ -94,6 +100,12 @@ This will give you something like:
 However, rules are defined using keys and values, so you can easily use your own custom solution.
 
 ```ruby
+rule = Rules::Rule.new(lhs_parameter_key: 'day_of_week', evaluator_key: 'equals', rhs_parameter_raw: 'Sunday')
+rule.lhs_parameter_value
+=> 'Sunday' # (or the current day of week)
+rule.evaluate
+=> true
+
 Order.has_rule_attributes(customer_email: { name: "Customer's email address" })
 order = Order.new
 rule_set = Rules::RuleSet.new(source: order)
