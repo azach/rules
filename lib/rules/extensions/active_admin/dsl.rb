@@ -3,11 +3,11 @@ HAS_MANY_OPTIONS = {
 }
 
 ActiveAdmin::FormBuilder.class_eval do
-  def has_rules
+  def has_rules(options = {})
     inputs('Rules', { class: 'inputs rules' }) do
       semantic_fields_for(:rule_set) do |rules_rule_set_form|
         rules_rule_set_form.has_many(:rules, HAS_MANY_OPTIONS) do |rules_rule_form|
-          rules_rule_form.input :lhs_parameter_key, :label => 'Left hand side', collection: rules_parameter_collection(object.rule_set)
+          rules_rule_form.input :lhs_parameter_key, :label => 'Left hand side', collection: rules_parameter_collection(object.rule_set, options)
           rules_rule_form.input :evaluator_key, :label => 'Evaluator', :as => :select, :collection => Rules.evaluators.map {|key, evaluator| [evaluator.name, key, {:'data-requires-rhs' => evaluator.requires_rhs?}] }.sort_by {|name, key| name }
           rules_rule_form.input :rhs_parameter_raw, :label => 'Enter a value', :wrapper_html => { :class => "rules_rhs_parameter" }
           # rules_rule_form.input :rhs_parameter_key, :label => 'Or choose a value', collection: rules_parameter_collection(object.rule_set), :wrapper_html => { :class => "rules_rhs_parameter" }
@@ -17,8 +17,13 @@ ActiveAdmin::FormBuilder.class_eval do
     end
   end
 
-  def rules_parameter_collection(rule_set)
-    @rules_parameter_collection ||= Rules.constants.merge(rule_set.try(:attributes) || {}).map {|key, const| [const.name, key, {:'data-type' => const.try(:type) || 'string'}] }
+  def rules_parameter_collection(rule_set, options = {})
+    base_constants = options[:constants] == false ? {} : Rules.constants
+    constants = base_constants.merge(rule_set.try(:attributes) || {})
+    @rules_parameter_collection ||=
+      constants.map do |key, const|
+        [const.name, key, {:'data-type' => const.try(:type) || 'string'}]
+      end
   end
 end
 

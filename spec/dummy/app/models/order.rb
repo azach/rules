@@ -9,10 +9,4 @@ class Order < ActiveRecord::Base
       name: 'order price'
     }
   })
-
-  def check_if_valid
-    evaluate \
-      customer: customer,
-      price: price
-  end
 end

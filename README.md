@@ -38,6 +38,21 @@ class Order < ActiveRecord::Base
     }
   })
 end
+
+class Author < ActiveRecord::Base
+  include Rules::HasRules
+
+  has_many :books
+
+  has_rule_attributes({
+    titles: {
+      name: "book titles by this author",
+      association: :books,
+      attribute: :title # Not required if the attribute name (here :titles) ends in a singularizable
+                        # version of the attribute (in this case, Book.title)
+    }
+  })
+end
 ```
 
 To evaluate a set of a rules, use the ```rules_pass?``` method on the instance. You may also pass the values of the attributes that you allowed users to define rules against at this point.
@@ -48,6 +63,10 @@ For example:
 order = Order.new
 order.email_address = "morbo@example.com"
 order.rules_pass?(customer_email: order.email_address)
+
+author = Author.new(first_name: "Charles", last_name: "Dickens")
+author.books.build(title: "A Tale of Two Cities")
+author.rules_pass? # No attributes needed if the values can be drawn from the model instance
 ```
 
 Defining Rules

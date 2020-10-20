@@ -6,6 +6,7 @@ describe Rules::Rule do
   let(:lhs) { 'today' }
   let(:rhs_key) { 'today' }
   let(:rhs_raw) { Date.today.to_s }
+  let(:order) { Order.new }
 
   describe 'validations' do
     it 'requires a valid evaluator' do
@@ -68,7 +69,7 @@ describe Rules::Rule do
       rule = Rules::Rule.new(evaluator_key: evaluator_key, lhs_parameter_key: lhs, rhs_parameter_key: rhs_key)
       rule.should be_valid
 
-      rule = Rules::Rule.new(evaluator_key: 'nil', lhs_parameter_key: lhs)
+      rule = Rules::Rule.new(evaluator_key: 'not_nil', lhs_parameter_key: lhs)
       rule.should be_valid
     end
   end
@@ -261,6 +262,55 @@ describe Rules::Rule do
       rule_set.stub(attributes: {current_user: double('attribute'), order_price: double('attribute')})
       rule = Rules::Rule.new(rule_set: rule_set)
       rule.should have(2).valid_attributes
+    end
+  end
+
+  describe 'model with associated model rules' do
+    context 'when association is has_many' do
+      it 'passes rules for parameter :on' do
+        author = Author.new(first_name: 'Charles', last_name: 'Dickens')
+        author.books.build(
+          title: 'A Tale of Two Cities',
+          year: 1859
+        )
+        rule = author.rule_set.rules.build(
+          lhs_parameter_key: :titles,
+          evaluator_key: 'contains',
+          rhs_parameter_raw: 'A Tale of Two Cities'
+        )
+        author.rules_pass?.should be true
+        author.rules_pass?(titles: ['A Tale of Two Cities']).should be true
+      end
+    end
+    
+    context 'when association is has_one' do
+      it 'passes rules for parameter :on' do
+        author = Author.new(first_name: 'Samuel', last_name: 'Clemens')
+        author.build_pen_name(
+          first_name: 'Mark',
+          last_name: 'Twain'
+        )
+        rule = author.rule_set.rules.build(
+          lhs_parameter_key: :pen_name,
+          evaluator_key: 'contains',
+          rhs_parameter_raw: 'Twain'
+        )
+        author.rules_pass?(pen_name: 'Twain').should be true
+        author.rules_pass?.should be true
+      end
+    end
+
+    context 'when attribute is on self' do
+      it 'passes rules with input' do
+        author = Author.new(first_name: 'Samuel', last_name: 'Clemens')
+        rule = author.rule_set.rules.build(
+          lhs_parameter_key: :last_name,
+          evaluator_key: 'contains',
+          rhs_parameter_raw: 'Cle'
+        )
+        author.rules_pass?(last_name: 'Clementine').should be true
+        author.rules_pass?.should be true
+      end
     end
   end
 end

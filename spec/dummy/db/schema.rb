@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20121029183623) do
+ActiveRecord::Schema.define(version: 20201020215256) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "resource_id",   null: false
@@ -46,12 +46,35 @@ ActiveRecord::Schema.define(version: 20121029183623) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
 
+  create_table "authors", force: :cascade do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.integer  "author_id"
+    t.string   "title"
+    t.integer  "year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.integer  "quantity"
     t.decimal  "price"
     t.string   "customer"
     t.date     "placed"
     t.date     "shipped"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "pen_names", force: :cascade do |t|
+    t.integer  "author_id"
+    t.string   "first_name"
+    t.string   "last_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
